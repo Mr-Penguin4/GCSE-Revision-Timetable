@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCSE Revision Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        html { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        
+        .schedule-table { 
+            width: 100%; 
+            min-width: 1000px;
+            table-layout: fixed; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+        }
+        
+        .sticky-col { position: sticky; left: 0; z-index: 20; background-color: white; }
+        .study-cell:hover { transform: translateY(-2px); transition: all 0.2s ease; cursor: pointer; }
+        
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        @keyframes pulse-indigo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        .ai-loading { animation: pulse-indigo 2s infinite; }
+        
+        .prose li { margin-bottom: 0.25rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+
+    <div id="app" class="max-w-7xl mx-auto px-4 py-8 md:py-16">
+        <header class="text-center mb-12">
+            <div class="inline-block px-4 py-1.5 mb-6 text-sm font-bold tracking-wider text-indigo-600 uppercase bg-indigo-50 rounded-full border border-indigo-100">
+                2026 - 2028 Academic Cycle
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
+                Revision Command <span class="text-indigo-600">Center</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Structured 14-day hybrid rotation with dedicated blocks for Further Maths and AI-assisted Active Recall.
+            </p>
+        </header>
+
+        <div class="flex flex-wrap justify-center gap-8 mb-10 text-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-lg bg-emerald-100 border-2 border-emerald-200"></div>
+                <span class="font-bold text-slate-600">Further Maths (Edexcel)</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-lg bg-amber-50 border-2 border-amber-200"></div>
+                <span class="font-bold text-slate-600">Weekend Study</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-lg bg-pink-50 border-2 border-pink-100"></div>
+                <span class="font-bold text-slate-600">Mock Paper Review</span>
+            </div>
+        </div>
+
+        <div id="tables-container" class="space-y-20">
+            <div class="space-y-6">
+                <h3 class="text-3xl font-black text-slate-900">Week 1 Rotation</h3>
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden custom-scrollbar overflow-x-auto">
+                    <table class="schedule-table">
+                        <thead class="bg-slate-900 text-white text-[11px] uppercase tracking-wider">
+                            <tr id="head-1"></tr>
+                        </thead>
+                        <tbody id="body-1"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-3xl font-black text-slate-900">Week 2 Rotation</h3>
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden custom-scrollbar overflow-x-auto">
+                    <table class="schedule-table">
+                        <thead class="bg-slate-900 text-white text-[11px] uppercase tracking-wider">
+                            <tr id="head-2"></tr>
+                        </thead>
+                        <tbody id="body-2"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-3xl font-black text-slate-900">Holiday Rotation</h3>
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden custom-scrollbar overflow-x-auto">
+                    <table class="schedule-table">
+                        <thead class="bg-slate-900 text-white text-[11px] uppercase tracking-wider">
+                            <tr id="head-3"></tr>
+                        </thead>
+                        <tbody id="body-3"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-20 text-center pb-12 border-t border-slate-200 pt-8">
+            <p class="text-slate-400 text-sm font-medium">Revision Command Center © 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        
+        const scheduleData = {
+            'Week 1': {
+                '15:30 - 16:30': { Mon: 'Further Maths: Number and Algebra', Tue: 'English Lang: Paper 1A', Wed: 'Biology B1 and B2', Thu: 'Further Maths: Coordinates and Calculas', Fri: 'Chemistry: C1, C2 and C3', Sat: 'Computer Science: Paper 2, Topic 6', Sun: 'Chemistry: C4, C5 and C6' },
+                '16:30 - 18:00': { Mon: 'Maths: Ratio & Proportion', Tue: 'English Lit: Shakespeare', Wed: 'Physics: P1 and P2', Thu: 'English Lit: A Christmas Carol', Fri: 'Maths: Algebra', Sat: 'English Lit: An Inspector Calls', Sun: 'English Lang: Paper 1B' },
+                '18:00 - 18:45': { Mon: 'BREAK / CHILL', Tue: 'BREAK / CHILL', Wed: 'BREAK / CHILL', Thu: 'BREAK / CHILL', Fri: 'BREAK / CHILL', Sat: 'Science: Required Practicals Review', Sun: 'Week 1 Preperation' },
+                '18:45 - 20:15': { Mon: 'Maths: Number', Tue: 'English Lang: Paper 2A', Wed: 'Spanish: Topic 1 Vocab', Thu: 'Physics: P3 and P4', Fri: 'Biology: B3 and B4', Sat: 'Maths: Geometry and Measures', Sun: 'REST' },
+                '20:15 - 20:45': { Mon: 'English Lit: Poetry', Tue: 'Maths: Statistics', Wed: 'Physics: P5 and P6', Thu: 'English Lang: Paper 2B', Fri: 'Maths: Probability', Sat: 'REST', Sun: 'REST' }
+            },
+            'Week 2': {
+                '15:30 - 16:30': { Mon: 'Spanish: Topic 2 Vocab', Tue: 'Geography: Paper 1, Topic 1', Wed: 'Computer Science: Paper 1, Topic 1', Thu: 'Spanish: Topic 3 Vocab', Fri: 'Physics: P7 and P8', Sat: 'Spanish: Listening', Sun: 'Computer Science: Paper 1, Topic 2' },
+                '16:30 - 18:00': { Mon: 'Chemistry: C7 and C8', Tue: 'Geography: Paper 1, Topic 2', Wed: 'Computer Science: Paper 1, Topic 3', Thu: 'Geography: Paper 1, Topic 3', Fri: 'Biology: B5 and B6', Sat: 'Geography: Paper 3, Topic 1', Sun: 'Spanish: Speaking' },
+                '18:00 - 18:45': { Mon: 'BREAK / CHILL', Tue: 'BREAK / CHILL', Wed: 'BREAK / CHILL', Thu: 'BREAK / CHILL', Fri: 'BREAK / CHILL', Sat: 'Computer Science: Coding Practice', Sun: 'Week 1 Preperation' },
+                '18:45 - 20:15': { Mon: 'Spanish: Reading', Tue: 'Geography: Paper 2, Topic 1', Wed: 'Computer Science: Paper 1, Topic 4', Thu: 'Geography: Paper 2, Topic 2', Fri: 'Chemistry: C9 and C10', Sat: 'REST', Sun: 'REST' },
+                '20:15 - 20:45': { Mon: 'Further Maths: Matrix, Transformations and Geometry', Tue: 'Computer Science: Paper 1, Topic 5', Wed: 'Geography: Paper 2, Topic 3', Thu: 'Spanish: Writing', Fri: 'Biology: B7 and Review', Sat: 'REST', Sun: 'REST' }
+            },
+            'Holiday Rotation': {
+                '10:00 - 11:30': { Mon: 'Full Mock Paper: Maths', Tue: 'Full Mock Paper: English', Wed: 'Full Mock Paper: Science', Thu: 'Full Mock Paper: Geography', Fri: 'Full Mock Paper: Further Maths', Sat: 'Weak Area Deep Dive', Sun: 'REST' },
+                '12:00 - 13:00': { Mon: 'Error Analysis (Maths)', Tue: 'Error Analysis (English)', Wed: 'Error Analysis (Science)', Thu: 'Error Analysis (Geography)', Fri: 'Error Analysis (F. Maths)', Sat: 'Flashcard Sprint', Sun: 'Plan Next Week' },
+                '13:00 - 14:30': { Mon: 'BREAK / CHILL', Tue: 'BREAK / CHILL', Wed: 'BREAK / CHILL', Thu: 'BREAK / CHILL', Fri: 'BREAK / CHILL', Sat: 'BREAK / CHILL', Sun: 'BREAK / CHILL' },
+                '14:30 - 16:30': { Mon: 'Further Maths: Topics 3,4 and 5', Tue: 'Science: Required Practicals', Wed: 'English: Quote Memorization', Thu: 'Geography: Paper 3, Topic 2', Fri: 'Computer Science: Coding Practice', Sat: 'REST', Sun: 'REST' },
+                '16:30 - 18:00': { Mon: 'Further Maths: Topics 4,5 and 6', Tue: 'Science: Required Practicals', Wed: 'English: Quote Memorization', Thu: 'Geography: Paper 3, Topic 3', Fri: 'Computer Science: Coding Practice', Sat: 'REST', Sun: 'REST' }
+            }
+        };
+
+        function init() {
+            [1, 2, 3].forEach(num => {
+                const head = document.getElementById(`head-${num}`);
+                head.innerHTML = `<th style="width: 100px" class="p-4 sticky-col border-r border-slate-200">Time</th>` + 
+                    days.map(d => `<th class="p-4 border-r border-slate-800 text-center">${d}</th>`).join('');
+                
+                const key = num === 1 ? 'Week 1' : num === 2 ? 'Week 2' : 'Holiday Rotation';
+                renderTable(key, `body-${num}`);
+            });
+        }
+
+        function renderTable(weekKey, bodyId) {
+            const body = document.getElementById(bodyId);
+            const data = scheduleData[weekKey];
+            
+            Object.entries(data).forEach(([time, tasks]) => {
+                const row = document.createElement('tr');
+                row.className = "border-b border-slate-100";
+                
+                const timeCell = document.createElement('td');
+                timeCell.className = "p-4 font-black text-slate-400 bg-white sticky-col border-r border-slate-100 text-[10px] text-center";
+                timeCell.innerHTML = time.replace(' - ', '<br>—<br>');
+                row.appendChild(timeCell);
+
+                days.forEach(day => {
+                    const task = tasks[day] || '-';
+                    const cell = document.createElement('td');
+                    cell.className = "p-2 align-top border-r border-slate-100";
+                    
+                    if (task !== 'BREAK / CHILL' && task !== 'REST' && task !== '-') {
+                        cell.classList.add("study-cell");
+                        
+                        let cardStyle = "";
+                        if (day === 'Sat' || day === 'Sun') {
+                            cardStyle = "bg-amber-50 border-amber-200 text-amber-900";
+                        
+                        } else if (task.includes('Flashcard')) {
+                            cardStyle = "bg-indigo-50 border-indigo-200 text-indigo-900";
+                        } else if (task.includes('Mock')) {
+                            cardStyle = "bg-pink-50 border-pink-200 text-pink-900";   
+                        } else if (task.includes('Further Maths')) {
+                            cardStyle = "bg-emerald-50 border-emerald-200 text-emerald-900";     
+                        } else if (day === 'Sat' || day === 'Sun') {
+                            cardStyle = "bg-amber-50 border-amber-200 text-amber-900";
+                        } else {
+                            cardStyle = "bg-white border-slate-200 text-slate-800";
+                        }
+                        
+                        cell.innerHTML = `<div class="h-full rounded-xl p-3 ${cardStyle} border-2 text-[12px] font-bold leading-tight">${task}</div>`;
+                    } else {
+                        cell.innerHTML = `<div class="p-3 text-slate-300 italic text-[10px] text-center">${task}</div>`;
+                    }
+                    row.appendChild(cell);
+                });
+                body.appendChild(row);
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
